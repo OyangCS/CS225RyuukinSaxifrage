@@ -49,6 +49,8 @@ We are working with a directed graph (assuming that each flight is one-way and n
     For the shortest path, the output can be stored in an array/vector of visited airports, similar to the
     solveMaze function from MP Mazes. As for Betweenness Centrality, it will most likely return a data
     structure of nodes/airports indicating its influence/importance in the directed graph. 
+    From our research, we found that the running time of Floyd-Warshall is O(n^3) due to its triple for loop, where n is number of vertices; its space complexitiy       is O(n^2). For Betweenness Centrality, time complexitiy is O(n * m) and space complexitiy is O(n + m), where n is number of vertices and m the number of edges.     These are our targets; that is, we will attempt to not exceed them. 
+    
 
 ## Timeline
 Our first few tasks are straightforward; we need to read the dataset and convert it into a directed graph. From there, we will design the algorithms. We may work on the proposed algorithms together instead of splitting the work. For the order of algorithms to be completed, BFS will most likely be our first choice because we are familiar with it. Next, we will focus on the Floyd-Warshall algorithm; this algorithm answers our leading question. Lastly, we will work on the betweenness centrality algorithm. It is important to complete our primary goal before working on something that can be considered secondary, such as betweenness centrality. 
