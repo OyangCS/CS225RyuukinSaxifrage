@@ -1,6 +1,6 @@
 To run, do the following steps:
 
-Open a terminal with source directory
+Open a terminal with source directory (cs225_project)
 mkdir build
 cd build
 cmake ..
