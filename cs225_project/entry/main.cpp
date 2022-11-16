@@ -10,22 +10,7 @@
 using namespace std;
 int main()
 {
-    /*
-    std::string s = "C,C++,,Java";
- 
-    std::vector<std::string> tokens;
-    std::string token;
-    std::stringstream ss(s);
-    while (getline(ss, token, ',')){
-        tokens.push_back(token);
-    }
- 
-    for (auto &s: tokens) {
-        std::cout << s << std::endl;
-    }
-    double p = 57.29577951;
-    std::cout << p << std::endl;
-    */
+    
 
     /*
     Airport a;
