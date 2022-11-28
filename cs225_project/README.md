@@ -1,13 +1,18 @@
+Docker environment and CMake used by CS225 assignments.
+
 To run, do the following steps:
 
-Open a terminal with source directory (cs225_project)
+Open a terminal with source directory (CS225RyuukinSaxifrage/cs225_project), then: 
 mkdir build
 cd build
 cmake ..
 
-To test, do the following steps:
+To run main:
 make main 
 ./main
-OR
+
+To run tests:
 make test
 ./test
+
+Note: Paths to files (such as the ones used in test cases) might need to be updated based on the user.

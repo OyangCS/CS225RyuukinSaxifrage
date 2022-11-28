@@ -1,3 +1,33 @@
+#pragma once
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+/*
+this class is used to store the data of all airports
+we implement the functions for calculate the distance between two airports and two cities
+also search by name and search by city
+*/
+
+struct Airport {
+    double longitude_;
+    double latitude_;
+    string name_;
+    string city_;
+    string id_;
+    string country_;
+    bool operator<(const Airport& other) const {
+        return id_ < other.id_;
+    }
+    bool operator==(const Airport& other) const {
+        return id_ == other.id_;
+    }
+};
+
+------------------------------------------------
+
 #include "airports.h"
 #include <fstream>
 #include <sstream>
@@ -28,6 +58,7 @@ Airports::Airports(string filename) {
         }
     }
 }
+
 vector<Airport> Airports::findAirportsbycity(string city) {
     vector<Airport> output;
     for (auto airport: airport_map_) {
@@ -35,6 +66,7 @@ vector<Airport> Airports::findAirportsbycity(string city) {
     }
     return output;
 }
+
 Airport Airports::findAirportbyid(string id) {
     for (auto airport: airport_map_) {
         if (airport.id_ == id) {
@@ -45,6 +77,7 @@ Airport Airports::findAirportbyid(string id) {
     tmp.id_ = "empty";
     return tmp;
 }
+
 //using haversien formula to calculate the distance between two methods, unit is kilometer
 double calculateDistance(Airport src, Airport des) {
     // convert longitude and latidude to radians
@@ -62,6 +95,7 @@ double calculateDistance(Airport src, Airport des) {
     double distance = R * temp;
     return distance;
 }
+
 vector<string> stringToVector(string input) {
     vector<string> output;
     string word;
