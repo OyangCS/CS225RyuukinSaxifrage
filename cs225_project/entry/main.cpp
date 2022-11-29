@@ -14,7 +14,7 @@ int main() {
     // First argument is path of airport data; second argument is path of routes data; both are within data folder
     Graph test("/workspaces/CS225/release-f22/CS225RyuukinSaxifrage/cs225_project/data/airports.dat.txt", "/workspaces/CS225/release-f22/CS225RyuukinSaxifrage/cs225_project/data/routes.dat.txt");
 
-    cout << test.BFSTraversal("5949", "3720") << endl;
+    cout << "BFS from 5949 to 3720: " << test.BFSTraversal("5700", "3453") << " steps" << endl;
 
     return 0;
 }

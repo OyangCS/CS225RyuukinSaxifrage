@@ -26,6 +26,10 @@ std::string TrimLeft(const std::string & str) {
     return tmp.erase(0, tmp.find_first_not_of(" "));
 }
 
+std::string TrimQuotations(const std::string & str) {
+    return "";
+}
+
 std::string Trim(const std::string & str) {
     std::string tmp = str;
     return TrimLeft(TrimRight(str));

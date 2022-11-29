@@ -119,9 +119,15 @@ Airport Graph::IDToAirport(string id) {
 
 // Returns number of airports/stops/steps needed to get from src to des
 // Arguments are the ids of the airports
+// -1 indicates that there is no path or src_id/des_id does not exist
 
 int Graph::BFSTraversal(string src_id, string des_id) {
     
+    // Check if src_id and des_id both exists in the graph
+    if (graph_.find(src_id) == graph_.end() || graph_.find(des_id) == graph_.end()) {
+        return -1;
+    }
+
     // Check if the arguments are the same;
     if (src_id == des_id) {
         return 0;
