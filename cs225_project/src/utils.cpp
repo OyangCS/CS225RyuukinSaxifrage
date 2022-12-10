@@ -27,7 +27,8 @@ std::string TrimLeft(const std::string & str) {
 }
 
 std::string TrimQuotations(const std::string & str) {
-    return "";
+    std::string tmp = str;
+    return tmp.erase(0, tmp.find_first_not_of("\"")).erase(tmp.find_last_not_of("\"") + 1);
 }
 
 std::string Trim(const std::string & str) {

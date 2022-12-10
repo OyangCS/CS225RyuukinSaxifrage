@@ -47,6 +47,9 @@ Graph::Graph(const string & airports, const string & routes) {
     matrix_ = vector<vector<double>> (directed_.size(), vector<double> (directed_.size()));
     for (auto& it : directed_) {   
         matrix_map.push_back(it.first);
+        for (size_t i = 0; i < it.second.size(); i++) {
+            distances_[it.first + it.second[i].des_id_] = it.second[i].distance_;
+        }
     }
 }
 
@@ -70,7 +73,7 @@ void Graph::IDToAirportMap(const string & airports) {
             latitude = stod(temp[7]);
             longitude = stod(temp[8]);
         }
-        id_map_[temp[0]] = Airport(temp[0], temp[1], temp[3], latitude, longitude);
+        id_map_[temp[0]] = Airport(temp[0], TrimQuotations(temp[1]), latitude, longitude);
         temp.clear();
     }
 }
@@ -93,10 +96,7 @@ double Graph::calculateDistance(Airport src, Airport des) {
 }
 
 Airport Graph::IDToAirport(string id) {
-    if (id_map_.find(id) != id_map_.end()) {
-        return id_map_[id];
-    }
-    return Airport();
+    return id_map_[id];
 }
 
 // Returns number of airports/stops/steps needed to get from src to des
@@ -155,13 +155,10 @@ void Graph::FloydWarshall() {
             if (i == j) {
                 matrix_[i][j] = 0;
             } else {
-                for (size_t k = 0; k < directed_[matrix_map[i]].size(); k++) {
-                    if (directed_[matrix_map[i]][k].des_id_ == matrix_map[j]) {
-                        matrix_[i][j] = directed_[matrix_map[i]][k].distance_;
-                        break;
-                    } else if (k + 1 == directed_[matrix_map[i]].size()) {
-                        matrix_[i][j] = numeric_limits<double>::infinity();
-                    }
+                try {
+                    matrix_[i][j] = distances_.at(matrix_map[i] + matrix_map[j]);
+                } catch (std::out_of_range) {
+                    matrix_[i][j] = numeric_limits<double>::infinity();
                 }
             }
         }

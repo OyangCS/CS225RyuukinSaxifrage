@@ -54,9 +54,17 @@ class Graph {
 
 
     private:
-    unordered_map<string, Airport> id_map_;
-    unordered_map<string, vector<Route>> graph_;
-    unordered_map<string, vector<Route>> directed_;
+    // Graphs
+    map<string, vector<Route>> graph_;
+    map<string, vector<Route>> directed_;
+
+    // Utility Maps
+
+    // ID-to-Airport 
+    map<string, Airport> id_map_;
+
+    // Distance Between Two Airports (keys are the concatenation of two IDs)
+    map<string, double> distances_;
 
     vector<vector<double>> matrix_;
     vector<string> matrix_map;
