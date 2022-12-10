@@ -33,7 +33,7 @@ class Graph {
     Graph(const string & airports, const string & routes);
 
     // Helper function for constructor to do id-to-airport mapping
-    void IDToAirportMap(map<string, vector<string>> graph, const string & airports);
+    void IDToAirportMap(const string & airports);
 
     // Calculate distance using Haversine formula 
     // Uses latitude and longitude 
@@ -48,7 +48,16 @@ class Graph {
     // An output of -1 means there is no path from src to des
     int BFSTraversal(string src_id, string des_id);
 
+
+    // Floyd-Warshall Algorithm
+    void FloydWarshall();
+
+
     private:
     unordered_map<string, Airport> id_map_;
     unordered_map<string, vector<Route>> graph_;
+    unordered_map<string, vector<Route>> directed_;
+
+    vector<vector<double>> matrix_;
+    vector<string> matrix_map;
 };
