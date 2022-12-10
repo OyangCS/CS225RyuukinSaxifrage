@@ -150,32 +150,6 @@ int Graph::BFSTraversal(string src_id, string des_id) {
     return -1;
 }
 
-void Graph::FloydWarshall() {
-    // Initialize Distance Matrix
-    for (size_t i = 0; i < matrix_.size(); i++) {
-        for (size_t j = 0; j < matrix_.size(); j++) {
-            if (i == j) {
-                matrix_[i][j] = 0;
-            } else {
-                try {
-                    matrix_[i][j] = distances_.at(matrix_map[i] + matrix_map[j]);
-                } catch (std::out_of_range) {
-                    matrix_[i][j] = numeric_limits<double>::infinity();
-                }
-            }
-        }
-    }
-
-    // Gets the final matrix after computing n (number of nodes in graph) times
-    for (size_t k = 0; k < directed_.size(); k++) {
-        for (size_t i = 0; i < directed_.size(); i++) {
-            for (size_t j = 0; j < directed_.size(); j++) {
-                matrix_[i][j] = min(matrix_[i][j], matrix_[i][k] + matrix_[k][j]);
-            }
-        }
-    }
-}
-
 void Graph::Centrality() {
     // Initialize centrality map
     for (auto& it : graph_) {
@@ -189,6 +163,8 @@ void Graph::Centrality() {
 
    
 }
+
+//calculate the betweenness centrality of a given node using brandes algorithm
 
 double Graph::betweenness_centrality(string airport_id) {
     unordered_map<string, unordered_map<string, vector<string>>> shortest_paths = all_shortest_paths();
@@ -217,91 +193,110 @@ double Graph::betweenness_centrality(string airport_id) {
 
 }
 
-unordered_map<string, unordered_map<string, vector<string>>> Graph::all_shortest_paths() {
 
-    // Initialize a map to store the shortest paths between each pair of nodes
 
-    std::unordered_map<string, std::unordered_map<string, vector<string>>> shortest_paths;
+// Returns the shortest path between src_id and des_id
+// using Dijkstra's algorithm
+// Returns an empty vector if there is no path or src_id/des_id does not exist
 
-    //Iterate over all pairs of nodes in the graph
+vector<string> Graph::shortest_path(string src_id, string des_id) {
+    // Check if src_id and des_id both exists in the graph
+    if (graph_.find(src_id) == graph_.end() || graph_.find(des_id) == graph_.end()) {
+        return vector<string>();
+    }
+
+    // Check if the arguments are the same;
+    if (src_id == des_id) {
+        return vector<string>();
+    }
+
+    // Dijkstra's algorithm
+    unordered_map<string, double> distance;
+    unordered_map<string, string> previous;
+    unordered_map<string, bool> visited;
+
+    // Initialize distance and previous
     for (auto& it : graph_) {
-        // Create a map to store the distances from the starting node to each other node in the graph
-        unordered_map<string, double> distances;
+        distance[it.first] = numeric_limits<double>::max();
+        previous[it.first] = "";
+    }
 
-        // Create a priority queue to store the nodes to visit
-        // ordered by their distance from the starting node
-        priority_queue<pair<double, string>, vector<pair<double, string>>, greater<pair<double, string>>> to_visit;
+    // Initialize distance of src_id to 0
+    distance[src_id] = 0;
 
-        // Initialize the distances to all nodes as infinity, except for the starting node
-        for (auto& it2 : graph_) {
-            if (it.first == it2.first) {
-                distances[it2.first] = 0;
-            } else {
-                distances[it2.first] = numeric_limits<double>::infinity();
-            }
-        }
+    // Initialize priority queue
+    priority_queue<pair<double, string>, vector<pair<double, string>>, greater<pair<double, string>>> pq;
+    pq.push(make_pair(0, src_id));
 
-        // Insert the starting node into the priority queue
-        to_visit.push(make_pair(0, it.first));
+    // Dijkstra's algorithm
+    while (!pq.empty()) {
+        string current = pq.top().second;
+        pq.pop();
 
-        // while the priority queue is not empty
-        while (!to_visit.empty()) {
-            // Get the node with the smallest distance from the starting node
-            string current = to_visit.top().second;
-            to_visit.pop();
-
-            // Iterate over all neighbors of the current node
+        if (visited[current] == false) {
             for (size_t i = 0; i < graph_[current].size(); i++) {
-                // Get the distance from the starting node to the neighbor
-                double distance = distances[current] + graph_[current][i].distance_;
-
-                // If the distance is less than the current distance to the neighbor
-                if (distance < distances[graph_[current][i].des_id_]) {
-                    // Update the distance to the neighbor
-                    distances[graph_[current][i].des_id_] = distance;
-
-                    // Insert the neighbor into the priority queue
-                    to_visit.push(make_pair(distance, graph_[current][i].des_id_));
+                double alt = distance[current] + graph_[current][i].distance_;
+                if (alt < distance[graph_[current][i].des_id_]) {
+                    distance[graph_[current][i].des_id_] = alt;
+                    previous[graph_[current][i].des_id_] = current;
+                    pq.push(make_pair(alt, graph_[current][i].des_id_));
                 }
             }
         }
 
-        // Iterate over all nodes in the graph
+        visited[current] = true;
+    }
+
+    // Reconstruct the path
+    vector<string> path;
+    string current = des_id;
+    while (current != "") {
+        path.push_back(current);
+        current = previous[current];
+    }
+
+    reverse(path.begin(), path.end());
+
+    return path;
+}
+
+unordered_map<string, unordered_map<string, vector<string>>> Graph::all_shortest_paths() {
+    unordered_map<string, unordered_map<string, vector<string>>> shortest_paths;
+
+    for (auto& it : graph_) {
         for (auto& it2 : graph_) {
-            // Create a vector to store the shortest path from the starting node to the current node
-            vector<string> path;
-
-            // Get the current node
-            string current = it2.first;
-
-            // While the current node is not the starting node
-            while (current != it.first) {
-                // Add the current node to the path
-                path.push_back(current);
-
-                // Iterate over all neighbors of the current node
-                for (size_t i = 0; i < graph_[current].size(); i++) {
-                    // If the distance from the starting node to the neighbor is equal to the distance from the starting node to the current node minus the distance from the current node to the neighbor
-                    if (distances[graph_[current][i].des_id_] == distances[current] - graph_[current][i].distance_) {
-                        // Set the current node to the neighbor
-                        current = graph_[current][i].des_id_;
-                        break;
-                    }
-                }
+            if (it.first != it2.first) {
+                shortest_paths[it.first][it2.first] = shortest_path(it.first, it2.first);
             }
-
-            // Add the starting node to the path
-            path.push_back(it.first);
-
-            // Reverse the path
-            reverse(path.begin(), path.end());
-
-            // Add the path to the map
-            shortest_paths[it.first][it2.first] = path;
         }
-
-
     }
 
     return shortest_paths;
 }
+
+void Graph::FloydWarshall() {
+    // Initialize Distance Matrix
+    for (size_t i = 0; i < matrix_.size(); i++) {
+        for (size_t j = 0; j < matrix_.size(); j++) {
+            if (i == j) {
+                matrix_[i][j] = 0;
+            } else {
+                try {
+                    matrix_[i][j] = distances_.at(matrix_map[i] + matrix_map[j]);
+                } catch (std::out_of_range) {
+                    matrix_[i][j] = numeric_limits<double>::infinity();
+                }
+            }
+        }
+    }
+
+    // Gets the final matrix after computing n (number of nodes in graph) times
+    for (size_t k = 0; k < directed_.size(); k++) {
+        for (size_t i = 0; i < directed_.size(); i++) {
+            for (size_t j = 0; j < directed_.size(); j++) {
+                matrix_[i][j] = min(matrix_[i][j], matrix_[i][k] + matrix_[k][j]);
+            }
+        }
+    }
+}
+

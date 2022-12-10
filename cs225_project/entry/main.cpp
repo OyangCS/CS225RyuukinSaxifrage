@@ -18,7 +18,17 @@ int main() {
     //TrimQuotations(test);
     //cout << TrimQuotations(test) << endl;
     Graph test("/workspaces/cs225/CS225RyuukinSaxifrage/cs225_project/data/airports.dat.txt", "/workspaces/cs225/CS225RyuukinSaxifrage/cs225_project/data/routes.dat.txt");
-    test.FloydWarshall();
-    //cout << test.FloydWarshall() << endl;
+    //test.FloydWarshall();
+    //test shortest path
+    unordered_map<string, unordered_map<string, vector<string>>> paths = test.all_shortest_paths();
+    for (auto it = paths.begin(); it != paths.end(); it++) {
+        for (auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
+            cout << it->first << " " << it2->first << " ";
+            for (auto it3 = it2->second.begin(); it3 != it2->second.end(); it3++) {
+                cout << *it3 << " ";
+            }
+            cout << endl;
+        }
+    }
     return 0;
 }

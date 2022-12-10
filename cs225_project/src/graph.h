@@ -49,12 +49,9 @@ class Graph {
     int BFSTraversal(string src_id, string des_id);
     unordered_map<string, unordered_map<string, vector<string>>> all_shortest_paths();
     double betweenness_centrality( string id);
-
-
-    // Floyd-Warshall Algorithm
-    void FloydWarshall();
-
+    vector<string> shortest_path(string src_id, string des_id);
     void Centrality();
+    void FloydWarshall();
 
 
     private:
