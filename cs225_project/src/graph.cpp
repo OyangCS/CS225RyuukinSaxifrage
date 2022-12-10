@@ -6,6 +6,7 @@
 #include <iostream>
 #include <algorithm>
 #include <queue>
+#include <stack>
 #include <map>
 #include <algorithm>
 #include <cmath>
@@ -35,6 +36,8 @@ Graph::Graph(const string & airports, const string & routes) {
             if (reverse_map[make_pair(route_temp[5], route_temp[3])] == true) {
                 graph_[route_temp[3]].push_back(Route(id_map_[route_temp[3]], id_map_[route_temp[5]], distance));
                 graph_[route_temp[5]].push_back(Route(id_map_[route_temp[5]], id_map_[route_temp[3]], distance));
+                if(find(nodes.begin(),nodes.end(),route_temp[3])==nodes.end())nodes.push_back(route_temp[3]);
+                if(find(nodes.begin(),nodes.end(),route_temp[5])==nodes.end())nodes.push_back(route_temp[5]);
             } else {
                 reverse_map[make_pair(route_temp[3], route_temp[5])] = true;
             }
@@ -300,3 +303,77 @@ void Graph::FloydWarshall() {
     }
 }
 
+
+//implement betweenness centrality using Brandes Algorithm
+void Graph::calculateBC() {
+    map<string, double> dependency;
+    map<string, double> dist;
+    map<string, vector<string>> pred;
+    map<string, double> num_path;
+    cout<< "start!!" <<endl;
+    cout<< "number: " << nodes.size()<< endl;
+    for (auto i = graph_.begin(); i != graph_.end(); ++i) {
+        pair<string, double> p(i->first, 0);
+        pair<string, double> p1(i->first, 0);
+        pair<string, double> p2(i->first, -1);
+        pair<string, vector<string>> p3(i->first, vector<string>());
+        pair<string, double> p4(i->first, 0);
+        bc_.insert(p);
+        dependency.insert(p1);
+        dist.insert(p2);
+        pred.insert(p3);
+        num_path.insert(p4);
+    }
+    int count = 1;
+    for(string s : nodes) {
+        cout<< count << "/"<< nodes.size() << endl;
+        //cout<< "from" << s << endl;
+        count++;
+        stack<string> S;
+        map<string, vector<string>> P = pred;
+        map<string, double> num_path_ = num_path;
+        num_path_[s] = 1;
+        map<string, double> d = dist;
+        d[s] = 0;
+        queue<string> Q;
+        Q.push(s);
+        while(!Q.empty()) {
+            string v = Q.front();
+            Q.pop();
+            S.push(v);
+            for (auto r = graph_[v].begin(); r !=graph_[v].end(); ++r) {
+                string w = r->des_id_;
+                if (d[w] < 0) {
+                    Q.push(w);
+                    d[w] = d[v] + 1;
+                }
+                if (d[w] == d[v] + 1) {
+                    num_path_[w] = num_path_[w] + num_path_[v];
+                    P[w].push_back(v);
+                }
+            }
+        }
+        map<string, double> dependency_ = dependency;
+        while(!S.empty()) {
+            string w = S.top();
+            S.pop();
+            for (string v : P[w]) {
+                dependency_[v] = dependency_[v] + (num_path_[v]/num_path_[w]) * (1 + dependency_[w]);
+            }
+                if (w != s) bc_[w] = bc_[w] + dependency_[w];
+        }
+    }
+}
+
+double Graph::getcentrality(string id) {
+    return bc_[id];
+}
+void Graph::print() {
+    for (auto i = graph_.begin(); i != graph_.end(); ++i) {
+        string src = i->first;
+        for (auto r = graph_[src].begin(); r !=graph_[src].end(); ++r) {
+            string w = r->des_id_;
+            cout << src << "->" << w<<endl;
+        }
+    }
+}

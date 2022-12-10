@@ -47,22 +47,32 @@ class Graph {
     // Ex: An output of 1 means that the des is a neighbor of the src
     // An output of -1 means there is no path from src to des
     int BFSTraversal(string src_id, string des_id);
+    //simple method to calculate betweenness centrality
     unordered_map<string, unordered_map<string, vector<string>>> all_shortest_paths();
     double betweenness_centrality( string id);
     vector<string> shortest_path(string src_id, string des_id);
     void Centrality();
     void FloydWarshall();
+    //using Brandes Algorithm to calculte betweenness centrality in O(VE)
+    void calculateBC();
 
+    double getcentrality(string id);
 
+    void print();
     private:
     // Graphs
     map<string, vector<Route>> graph_;
     map<string, vector<Route>> directed_;
 
     // Utility Maps
+    map<string, double> bc_; //this map stores the betweenness centrality of each airports in the graph, where key is the id of the airport
 
     // ID-to-Airport 
     map<string, Airport> id_map_;
+
+    //nodes set
+    vector<string> nodes;
+
 
     // Distance Between Two Airports (keys are the concatenation of two IDs)
     map<string, double> distances_;
