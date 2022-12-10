@@ -47,10 +47,14 @@ class Graph {
     // Ex: An output of 1 means that the des is a neighbor of the src
     // An output of -1 means there is no path from src to des
     int BFSTraversal(string src_id, string des_id);
+    unordered_map<string, unordered_map<string, vector<string>>> all_shortest_paths();
+    double betweenness_centrality( string id);
 
 
     // Floyd-Warshall Algorithm
     void FloydWarshall();
+
+    void Centrality();
 
 
     private:
@@ -68,4 +72,6 @@ class Graph {
 
     vector<vector<double>> matrix_;
     vector<string> matrix_map;
+
+    unordered_map<string, double> centrality_;
 };

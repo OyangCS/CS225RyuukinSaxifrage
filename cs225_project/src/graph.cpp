@@ -50,6 +50,7 @@ Graph::Graph(const string & airports, const string & routes) {
         for (size_t i = 0; i < it.second.size(); i++) {
             distances_[it.first + it.second[i].des_id_] = it.second[i].distance_;
         }
+    
     }
 }
 
@@ -66,6 +67,7 @@ void Graph::IDToAirportMap(const string & airports) {
         SplitString(data[i], ',', temp);
         double latitude;
         double longitude;
+
         try {
             latitude = stod(temp[6]);
             longitude = stod(temp[7]);
@@ -172,4 +174,134 @@ void Graph::FloydWarshall() {
             }
         }
     }
+}
+
+void Graph::Centrality() {
+    // Initialize centrality map
+    for (auto& it : graph_) {
+        centrality_[it.first] = 0;
+    }
+
+    // Calculate centrality
+    for (auto& it : centrality_) {
+        it.second = betweenness_centrality(it.first);
+    }
+
+   
+}
+
+double Graph::betweenness_centrality(string airport_id) {
+    unordered_map<string, unordered_map<string, vector<string>>> shortest_paths = all_shortest_paths();
+    
+    // Initialize a variable to store the number of 
+    //shortest paths that pass through the given node
+
+    int num_shortest_paths = 0;
+
+    // Iterate over all pairs of nodes in the graph
+    for (auto& it : graph_) {
+        for (auto& it2 : graph_) {
+            if (it.first != it2.first) {
+                // Iterate over all shortest paths between the two nodes
+                for (size_t i = 0; i < shortest_paths[it.first][it2.first].size(); i++) {
+                    // Check if the given node is in the path
+                    if (shortest_paths[it.first][it2.first][i] == airport_id) {
+                        num_shortest_paths++;
+                    }
+                }
+            }
+        }
+    }
+
+    return static_cast<double>(num_shortest_paths) / static_cast<double>(shortest_paths.size());
+
+}
+
+unordered_map<string, unordered_map<string, vector<string>>> Graph::all_shortest_paths() {
+
+    // Initialize a map to store the shortest paths between each pair of nodes
+
+    std::unordered_map<string, std::unordered_map<string, vector<string>>> shortest_paths;
+
+    //Iterate over all pairs of nodes in the graph
+    for (auto& it : graph_) {
+        // Create a map to store the distances from the starting node to each other node in the graph
+        unordered_map<string, double> distances;
+
+        // Create a priority queue to store the nodes to visit
+        // ordered by their distance from the starting node
+        priority_queue<pair<double, string>, vector<pair<double, string>>, greater<pair<double, string>>> to_visit;
+
+        // Initialize the distances to all nodes as infinity, except for the starting node
+        for (auto& it2 : graph_) {
+            if (it.first == it2.first) {
+                distances[it2.first] = 0;
+            } else {
+                distances[it2.first] = numeric_limits<double>::infinity();
+            }
+        }
+
+        // Insert the starting node into the priority queue
+        to_visit.push(make_pair(0, it.first));
+
+        // while the priority queue is not empty
+        while (!to_visit.empty()) {
+            // Get the node with the smallest distance from the starting node
+            string current = to_visit.top().second;
+            to_visit.pop();
+
+            // Iterate over all neighbors of the current node
+            for (size_t i = 0; i < graph_[current].size(); i++) {
+                // Get the distance from the starting node to the neighbor
+                double distance = distances[current] + graph_[current][i].distance_;
+
+                // If the distance is less than the current distance to the neighbor
+                if (distance < distances[graph_[current][i].des_id_]) {
+                    // Update the distance to the neighbor
+                    distances[graph_[current][i].des_id_] = distance;
+
+                    // Insert the neighbor into the priority queue
+                    to_visit.push(make_pair(distance, graph_[current][i].des_id_));
+                }
+            }
+        }
+
+        // Iterate over all nodes in the graph
+        for (auto& it2 : graph_) {
+            // Create a vector to store the shortest path from the starting node to the current node
+            vector<string> path;
+
+            // Get the current node
+            string current = it2.first;
+
+            // While the current node is not the starting node
+            while (current != it.first) {
+                // Add the current node to the path
+                path.push_back(current);
+
+                // Iterate over all neighbors of the current node
+                for (size_t i = 0; i < graph_[current].size(); i++) {
+                    // If the distance from the starting node to the neighbor is equal to the distance from the starting node to the current node minus the distance from the current node to the neighbor
+                    if (distances[graph_[current][i].des_id_] == distances[current] - graph_[current][i].distance_) {
+                        // Set the current node to the neighbor
+                        current = graph_[current][i].des_id_;
+                        break;
+                    }
+                }
+            }
+
+            // Add the starting node to the path
+            path.push_back(it.first);
+
+            // Reverse the path
+            reverse(path.begin(), path.end());
+
+            // Add the path to the map
+            shortest_paths[it.first][it2.first] = path;
+        }
+
+
+    }
+
+    return shortest_paths;
 }
