@@ -15,4 +15,4 @@ To run tests:
 make test
 ./test
 
-Note: Paths to files (such as the ones used in test cases) might need to be updated based on the user.
+Note: Paths to the data files (such as the ones used in test cases) might need to be updated based on the user.
