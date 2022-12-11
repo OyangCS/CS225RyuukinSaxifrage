@@ -39,23 +39,27 @@ class Graph {
     // Uses latitude and longitude 
     double calculateDistance(Airport src, Airport des);
 
-    // Get the associated airport with the input id
+    // Gets the associated airport based on input ID
     Airport IDToAirport(string id);
 
-    // BFS 
-    // Returns number of steps needed for traversal 
-    // Ex: An output of 1 means that the des is a neighbor of the src
-    // An output of -1 means there is no path from src to des
-    int BFSTraversal(string src_id, string des_id);
-    //simple method to calculate betweenness centrality
+    // Testing Functions
+    bool UndirectedContains(string id, string target);
+    bool DirectedContains(string id, string target);
+    
+
+    vector<string> BFSShortestPath(string src_id, string des_id);
+
+    // Floyd-Warshall
+    void FloydWarshall();
+
+    // Betweenness Centrality
+    void Centrality();
+    // Simple method to calculate betweenness centrality
     unordered_map<string, unordered_map<string, vector<string>>> all_shortest_paths();
     double betweenness_centrality( string id);
     vector<string> shortest_path(string src_id, string des_id);
-    void Centrality();
-    void FloydWarshall();
     //using Brandes Algorithm to calculte betweenness centrality in O(VE)
     void calculateBC();
-
     double getcentrality(string id);
 
     void print();

@@ -26,6 +26,7 @@ std::string TrimLeft(const std::string & str) {
     return tmp.erase(0, tmp.find_first_not_of(" "));
 }
 
+// Method to remove quotation marks from data
 std::string TrimQuotations(const std::string & str) {
     std::string tmp = str;
     return tmp.erase(0, tmp.find_first_not_of("\"")).erase(tmp.find_last_not_of("\"") + 1);

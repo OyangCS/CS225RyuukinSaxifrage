@@ -11,10 +11,24 @@
 using namespace std;
 
 
-TEST_CASE("Test ID-To-Airport Mapping", "[tag1][tag2]") {
+TEST_CASE("Test Graph Constructor (Data Parsing and Mapping)") {
 
-    Graph test("/workspaces/CS225/release-f22/CS225RyuukinSaxifrage/cs225_project/data/airports.dat.txt", "/workspaces/CS225/release-f22/CS225RyuukinSaxifrage/cs225_project/data/routes.dat.txt");
+    Graph test("/workspaces/CS225/release-f22/CS225RyuukinSaxifrage/cs225_project/data/airports_huge.dat.txt", "/workspaces/CS225/release-f22/CS225RyuukinSaxifrage/cs225_project/data/routes.dat.txt");
 
+    // Undirected Graph Mapping
+    REQUIRE(test.UndirectedContains("2597", "2531"));
+    REQUIRE(test.UndirectedContains("2531", "2597"));
+
+    REQUIRE(test.UndirectedContains("6014", "2531") == false);
+
+    // Directed Graph Mapping 
+    REQUIRE(test.DirectedContains("340", "2910"));
+    REQUIRE(test.DirectedContains("4041", "3830"));
+    REQUIRE(test.DirectedContains("1926", "3550"));
+
+    REQUIRE(test.UndirectedContains("6014", "2531") == false);
+
+    // ID-to-Airport Mapping
     Airport one = test.IDToAirport("596");
 
     REQUIRE(one.id_ == "596");
@@ -34,3 +48,4 @@ TEST_CASE("Test ID-To-Airport Mapping", "[tag1][tag2]") {
     REQUIRE(three.latitude_ == 66.363899230957);
     REQUIRE(three.longitude_ == 14.301400184631);
 }
+
