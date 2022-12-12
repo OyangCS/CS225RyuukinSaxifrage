@@ -77,6 +77,38 @@ TEST_CASE("BFS Shortest Path") {
 
 }
 
+TEST_CASE("Test Shortest Path") {
+    /*
+    this graph is a unweighted undirected graph used to test function to calculate the betweenness centrality
+    A - B - D - F
+         \ / \ /
+          C - E
+    retrieved from https://blog.csdn.net/houzhizhen/article/details/109316236
+    bc : betweenness centrality
+    bc of A : 0
+    bc of B : 8
+    bc of C : 2
+    bc of D : 7
+    bc of E : 1
+    bc of F : 0
+    */
+    
+    Graph test("/workspaces/cs225/CS225RyuukinSaxifrage/cs225_project/data/small_test_graph.txt", "/workspaces/cs225/CS225RyuukinSaxifrage/cs225_project/data/small_test_routes.txt");
+
+    vector<string> path = test.shortest_path("A", "D");
+    vector<string> expected = {"A", "B", "D"};
+    REQUIRE(path == expected);
+
+    path = test.shortest_path("C", "F");
+    expected = {"C", "D", "F"};
+    REQUIRE(path == expected);
+
+    path = test.shortest_path("A", "F");
+    expected = {"A", "B", "D", "F"};
+    REQUIRE(path == expected);
+
+}
+
 // Use small_test_graph for first input and small_test_route for second input
 TEST_CASE("Test Betweenness centrality") {
     Graph test("", "");
