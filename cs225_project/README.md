@@ -17,7 +17,7 @@ make test
 
 NOTE: Paths to the data files (such as the ones used in main and test cases) might need to be updated based on the user. If paths do not work, most efficient way to replace paths/filenames in a file is probably find and replace all.
 
-1.) Right click a data file under data folder, copy path. The entire dataset files are named airports and routes.
+1.) Right click a data file under data folder, copy path. The entire dataset files are just named airports and routes.
 2.) CTRL + F for Windows and CTRL + Command Key + F for Mac (Opens find)
 3.) CTRL + H for Windows and CTRL + Command Key + H for Mac (Opens replace)
 4.) There should be replace all next to the replace input box
