@@ -15,7 +15,7 @@ To run tests:
 make test
 ./test
 
-To run individual tests, do ./test (name of test case including "")
+To run individual tests, do ./test "replace-this-part-with-name-of-test-case"
 
 NOTE: Paths to the data files (such as the ones used in main and test cases) will need to be updated based on the user. Most efficient way to replace paths/filenames in a file is probably find and replace all. In test file, we replaced the paths with airportsfile and routesfile strings for the first two test cases. These two cases should be able to use the complete data sets.
 
