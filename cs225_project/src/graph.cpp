@@ -1,4 +1,3 @@
-/* Your code here! */
 #include "graph.h"
 #include "airport.h"
 #include "utils.h"
@@ -40,8 +39,8 @@ Graph::Graph(const string & airports, const string & routes) {
             if (reverse_map[make_pair(route_temp[5], route_temp[3])] == true) {
                 undirected_[route_temp[3]].push_back(Route(id_map_[route_temp[3]], id_map_[route_temp[5]], distance));
                 undirected_[route_temp[5]].push_back(Route(id_map_[route_temp[5]], id_map_[route_temp[3]], distance));
-                if(find(nodes.begin(),nodes.end(),route_temp[3])==nodes.end())nodes.push_back(route_temp[3]);
-                if(find(nodes.begin(),nodes.end(),route_temp[5])==nodes.end())nodes.push_back(route_temp[5]);
+                // if(find(nodes.begin(),nodes.end(),route_temp[3])==nodes.end())nodes.push_back(route_temp[3]);
+                // if(find(nodes.begin(),nodes.end(),route_temp[5])==nodes.end())nodes.push_back(route_temp[5]);
             } else {
                 reverse_map[make_pair(route_temp[3], route_temp[5])] = true;
             }
@@ -77,15 +76,14 @@ Graph::Graph(const string & airports, const string & routes) {
     }
 
     // For Floyd-Warshall Algorithm
-    // matrix_ = vector<vector<double>> (directed_.size(), vector<double> (directed_.size()));
-    // for (auto& it : directed_) {   
-    //     matrix_map.push_back(it.first);
-    //     for (size_t i = 0; i < it.second.size(); i++) {
-    //         distances_[it.first + it.second[i].des_id_] = it.second[i].distance_;
-    //     }
-    // }
+    matrix_ = vector<vector<double>> (directed_.size(), vector<double> (directed_.size()));
+    for (auto& it : directed_) {   
+        matrix_map.push_back(it.first);
+        for (size_t i = 0; i < it.second.size(); i++) {
+            distances_[it.first + it.second[i].des_id_] = it.second[i].distance_;
+        }
+    }
 }
-
 
 // Creates a map that pairs unique ids (strings) to airport data (name, country, latitude, and longitude)
 // The dataset itself provides unique ids and the id of each airport is the first data entry of the line
@@ -114,7 +112,6 @@ void Graph::IDToAirportMap(const string & airports) {
         temp.clear();
     }
 }
-
 
 // Calculates distance between two airports using Haversine formula
 double Graph::calculateDistance(Airport src, Airport des) {
@@ -176,8 +173,8 @@ An empty vector indicates that no path exists
 */
 vector<string> Graph::BFSShortestPath(string src_id, string des_id) {
 
-    // Check for nonexisting ids and same arguments
-    if(directed_.find(src_id) == directed_.end() || directed_.find(des_id) == directed_.end()) {
+    // Check for nonexisting id and same arguments
+    if (directed_.find(src_id) == directed_.end()) {
         return vector<string>();
     } else if (src_id == des_id) {
         return vector<string> { src_id, des_id };
@@ -482,4 +479,8 @@ void Graph::PrintShortestPath(string src_id, string des_id) {
         }
         myfile.close();
     }
+}
+
+map<string, double> Graph::getCentrality() {
+    return bc_;
 }

@@ -32,7 +32,7 @@ entry -> main.cpp for running algorithms
 src -> code for algorithms
 tests -> test suites
 
-Information For Used Functions (All functions are under the Graph class):
+Information For Used Functions (all functions are under the Graph class):
 
 Graph(const string & airports, const string & routes) [Contains Output File]
     - Constructor for graph

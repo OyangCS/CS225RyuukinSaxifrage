@@ -11,11 +11,15 @@ using namespace std;
 
 int main() {
 
-    Graph test("/workspaces/CS225/release-f22/CS225RyuukinSaxifrage/cs225_project/data/airports_huge.dat.txt", "/workspaces/CS225/release-f22/CS225RyuukinSaxifrage/cs225_project/data/routes.dat.txt");
-
+    Graph test("/workspaces/CS225/release-f22/CS225RyuukinSaxifrage/cs225_project/data/airports.dat.txt", "/workspaces/CS225/release-f22/CS225RyuukinSaxifrage/cs225_project/data/routes.dat.txt");
     // First argument is path of airport data; second argument is path of routes data; both are within data folder
-    // For Owen
-    test.PrintShortestPath("994", "3351");
+    // 
+    // vector<string> one = test.BFSShortestPath("1354", "3830");
+    
+    // for (size_t i = 0; i < one.size(); i++) {
+    //     cout << one[i] + " ";
+    // }
+    // cout << endl;
     // test.PrintShortestPath("3729", "3351");
 
 
@@ -39,6 +43,12 @@ int main() {
     */
    // test.calculateBC();
    // cout << test.getcentrality("B") << endl;
+    test.calculateBC();
+    map<string, double> centrality = test.getCentrality();
+    vector<pair<string, double>> list = sortmap(centrality);
+    for (unsigned i = 0; i < 5; ++i) {
+        cout<< list[i].first<< " with centrality: " << list[i].second<<endl;
+    }
    
     return 0;
 }

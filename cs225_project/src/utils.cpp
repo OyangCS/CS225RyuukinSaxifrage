@@ -47,3 +47,16 @@ int SplitString(const std::string & str1, char sep, std::vector<std::string> &fi
     fields.push_back(str);
     return fields.size();
 }
+
+bool comp(pair<string, double>& a, pair<string, double>& b) {
+    return a.second > b.second;
+}
+
+vector<pair<string, double>> sortmap(map<string, double>& M) {
+    vector<pair<string, double>> A;
+    for (auto& it: M) {
+        A.push_back(it);
+    }
+    sort(A.begin(), A.end(), comp);
+    return A;
+}

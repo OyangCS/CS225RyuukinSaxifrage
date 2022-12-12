@@ -5,6 +5,7 @@
 
 using namespace std;
 
+// Simple Airport struct to hold data
 struct Airport {
     Airport();
     Airport(string id, string name, double latitude, double longitude);
