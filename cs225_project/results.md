@@ -8,6 +8,6 @@ Floyd-Warshall and Betweenness Centrality were the algorithms that we did not ha
 to BFS that we can run with the entire dataset though it can take a while, we learned that Floyd-Warshall and Betweenness Centrality are much less forgiving due to the vast size of our dataset. 
 
 Floyd-Warshall constructs a matrix a number of times depending on the number of vertices. To help visualize the
-problem, our directed graph has 3,199 vertices out of the dataset's 3321 airports, so Floyd-Warshall will need to adjust a matrix that is 3199x3199 in size 3199 times. The number of vertices do not match up with the number of airports in the route dataset because some airports do not have any routes where they are the starting airport. In other words, they have no edges because it is a directed graph.  
+problem, our directed graph has 3,199 vertices out of the dataset's 3321 airports, so Floyd-Warshall will need to adjust a matrix that is 3199x3199 in size 3199 times (the algorithm's O(n^3)). The number of vertices do not match up with the number of airports in the route dataset because some airports do not have any routes where they are the starting airport. In other words, they have no edges because it is a directed graph.  
 
 Talk About Betweenness Centrality Here
