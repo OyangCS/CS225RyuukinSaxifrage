@@ -70,7 +70,6 @@ class Graph {
     //using Brandes Algorithm to calculte betweenness centrality in O(VE)
     void calculateBC();
     double getcentrality(string id);
-
     map<string, double> getCentrality();
     void print();
     
