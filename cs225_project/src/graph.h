@@ -1,7 +1,6 @@
 #pragma once
 /* 
 This is the Graph class of our project!
-This graph is undirected but weighted.
 */
 
 #include "airport.h"
@@ -14,7 +13,7 @@ This graph is undirected but weighted.
 using namespace std;
 
 // Functions as the edges of the graph
-// src for source and des for destination
+// src for source/start and des for destination
 struct Route {
     Route(Airport src, Airport des, double distance) : src_(src), des_(des) {
         src_id_ = src_.id_;
@@ -30,6 +29,7 @@ struct Route {
 
 class Graph {
     public:
+    // Constructor takes in paths to airport and routes CSV files
     Graph(const string & airports, const string & routes);
 
     // Helper function for constructor to do id-to-airport mapping
@@ -47,10 +47,12 @@ class Graph {
     bool DirectedContains(string id, string target);
     void PrintShortestPath(string src_id, string des_id);
     
-
+    // Calculates shortest path from src to des; inputs are IDs
+    // Outputs a vector of ids that shows the order of path to take 
     vector<string> BFSShortestPath(string src_id, string des_id);
 
     // Floyd-Warshall
+    // Utilizes whole directed graph 
     void FloydWarshall();
 
     // Betweenness Centrality
@@ -66,7 +68,7 @@ class Graph {
     void print();
     private:
     // Graphs
-    map<string, vector<Route>> graph_;
+    map<string, vector<Route>> undirected_;
     map<string, vector<Route>> directed_;
 
     // Utility Maps

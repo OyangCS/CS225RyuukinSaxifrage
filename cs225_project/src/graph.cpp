@@ -38,8 +38,8 @@ Graph::Graph(const string & airports, const string & routes) {
         if (id_map_.find(route_temp[3]) != id_map_.end() && id_map_.find(route_temp[5]) != id_map_.end()) {
             double distance = calculateDistance(id_map_[route_temp[3]], id_map_[route_temp[5]]);
             if (reverse_map[make_pair(route_temp[5], route_temp[3])] == true) {
-                graph_[route_temp[3]].push_back(Route(id_map_[route_temp[3]], id_map_[route_temp[5]], distance));
-                graph_[route_temp[5]].push_back(Route(id_map_[route_temp[5]], id_map_[route_temp[3]], distance));
+                undirected_[route_temp[3]].push_back(Route(id_map_[route_temp[3]], id_map_[route_temp[5]], distance));
+                undirected_[route_temp[5]].push_back(Route(id_map_[route_temp[5]], id_map_[route_temp[3]], distance));
                 if(find(nodes.begin(),nodes.end(),route_temp[3])==nodes.end())nodes.push_back(route_temp[3]);
                 if(find(nodes.begin(),nodes.end(),route_temp[5])==nodes.end())nodes.push_back(route_temp[5]);
             } else {
@@ -53,7 +53,7 @@ Graph::Graph(const string & airports, const string & routes) {
     // Output file to show undirected graph
     ofstream undirect ("undirected_.txt");
     if (undirect.is_open()) {
-        for (auto& it : graph_) {
+        for (auto& it : undirected_) {
             undirect << it.first + " is connected to: ";
             for (size_t i = 0; i < it.second.size(); i++) {
                 undirect << it.second[i].des_id_ + " ";
@@ -144,11 +144,11 @@ Airport Graph::IDToAirport(string id) {
 
 // Checks if the neighbors of id in undirected graph contains target
 bool Graph::UndirectedContains(string id, string target) {
-    if (graph_.find(id) == graph_.end()) {
+    if (undirected_.find(id) == undirected_.end()) {
         return false;
     }
-    for (size_t i = 0; i < graph_[id].size(); i++) {
-        if (graph_[id][i].des_id_ == target) {
+    for (size_t i = 0; i < undirected_[id].size(); i++) {
+        if (undirected_[id][i].des_id_ == target) {
             return true;
         }
     }
@@ -236,7 +236,7 @@ vector<string> Graph::BFSShortestPath(string src_id, string des_id) {
 
 void Graph::Centrality() {
     // Initialize centrality map
-    for (auto& it : graph_) {
+    for (auto& it : undirected_) {
         centrality_[it.first] = 0;
     }
 
@@ -256,8 +256,8 @@ double Graph::betweenness_centrality(string airport_id) {
     int num_shortest_paths = 0;
 
     // Iterate over all pairs of nodes in the graph
-    for (auto& it : graph_) {
-        for (auto& it2 : graph_) {
+    for (auto& it : undirected_) {
+        for (auto& it2 : undirected_) {
             if (it.first != it2.first) {
                 // Iterate over all shortest paths between the two nodes
                 for (size_t i = 0; i < shortest_paths[it.first][it2.first].size(); i++) {
@@ -284,7 +284,7 @@ Returns an empty vector if there is no path or src_id/des_id does not exist
 
 vector<string> Graph::shortest_path(string src_id, string des_id) {
     // Check if src_id and des_id both exists in the graph
-    if (graph_.find(src_id) == graph_.end() || graph_.find(des_id) == graph_.end()) {
+    if (undirected_.find(src_id) == undirected_.end() || undirected_.find(des_id) == undirected_.end()) {
         return vector<string>();
     }
 
@@ -299,7 +299,7 @@ vector<string> Graph::shortest_path(string src_id, string des_id) {
     unordered_map<string, bool> visited;
 
     // Initialize distance and previous
-    for (auto& it : graph_) {
+    for (auto& it : undirected_) {
         distance[it.first] = numeric_limits<double>::max();
         previous[it.first] = "";
     }
@@ -317,12 +317,12 @@ vector<string> Graph::shortest_path(string src_id, string des_id) {
         pq.pop();
 
         if (visited[current] == false) {
-            for (size_t i = 0; i < graph_[current].size(); i++) {
-                double alt = distance[current] + graph_[current][i].distance_;
-                if (alt < distance[graph_[current][i].des_id_]) {
-                    distance[graph_[current][i].des_id_] = alt;
-                    previous[graph_[current][i].des_id_] = current;
-                    pq.push(make_pair(alt, graph_[current][i].des_id_));
+            for (size_t i = 0; i < undirected_[current].size(); i++) {
+                double alt = distance[current] + undirected_[current][i].distance_;
+                if (alt < distance[undirected_[current][i].des_id_]) {
+                    distance[undirected_[current][i].des_id_] = alt;
+                    previous[undirected_[current][i].des_id_] = current;
+                    pq.push(make_pair(alt, undirected_[current][i].des_id_));
                 }
             }
         }
@@ -346,8 +346,8 @@ vector<string> Graph::shortest_path(string src_id, string des_id) {
 unordered_map<string, unordered_map<string, vector<string>>> Graph::all_shortest_paths() {
     unordered_map<string, unordered_map<string, vector<string>>> shortest_paths;
 
-    for (auto& it : graph_) {
-        for (auto& it2 : graph_) {
+    for (auto& it : undirected_) {
+        for (auto& it2 : undirected_) {
             if (it.first != it2.first) {
                 shortest_paths[it.first][it2.first] = shortest_path(it.first, it2.first);
             }
@@ -401,7 +401,7 @@ void Graph::calculateBC() {
     map<string, double> num_path;
     cout<< "start!!" <<endl;
     cout<< "number: " << nodes.size()<< endl;
-    for (auto i = graph_.begin(); i != graph_.end(); ++i) {
+    for (auto i = undirected_.begin(); i != undirected_.end(); ++i) {
         pair<string, double> p(i->first, 0);
         pair<string, double> p1(i->first, 0);
         pair<string, double> p2(i->first, -1);
@@ -430,7 +430,7 @@ void Graph::calculateBC() {
             string v = Q.front();
             Q.pop();
             S.push(v);
-            for (auto r = graph_[v].begin(); r !=graph_[v].end(); ++r) {
+            for (auto r = undirected_[v].begin(); r !=undirected_[v].end(); ++r) {
                 string w = r->des_id_;
                 if (d[w] < 0) {
                     Q.push(w);
@@ -459,9 +459,9 @@ double Graph::getcentrality(string id) {
 }
 
 void Graph::print() {
-    for (auto i = graph_.begin(); i != graph_.end(); ++i) {
+    for (auto i = undirected_.begin(); i != undirected_.end(); ++i) {
         string src = i->first;
-        for (auto r = graph_[src].begin(); r !=graph_[src].end(); ++r) {
+        for (auto r = undirected_[src].begin(); r !=undirected_[src].end(); ++r) {
             string w = r->des_id_;
             cout << src << "->" << w<<endl;
         }
