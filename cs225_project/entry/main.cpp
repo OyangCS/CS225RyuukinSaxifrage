@@ -39,6 +39,11 @@ int main() {
     */
    // test.calculateBC();
    // cout << test.getcentrality("B") << endl;
-   
+    test.calculateBC();
+    map<string, double> centrality = test.getCentrality();
+    vector<pair<string, double>> list = sortmap(centrality);
+    for (unsigned i = 0; i < 5; ++i) {
+        cout<< list[i].first<< " with centrality: " << list[i].second<<endl;
+    }
     return 0;
 }

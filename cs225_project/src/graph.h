@@ -60,11 +60,12 @@ class Graph {
     // Simple method to calculate betweenness centrality
     unordered_map<string, unordered_map<string, vector<string>>> all_shortest_paths();
     double betweenness_centrality( string id);
+    //find shortest path from an airport to another
     vector<string> shortest_path(string src_id, string des_id);
     //using Brandes Algorithm to calculte betweenness centrality in O(VE)
     void calculateBC();
     double getcentrality(string id);
-
+    map<string, double> getCentrality();
     void print();
     private:
     // Graphs

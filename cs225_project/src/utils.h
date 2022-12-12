@@ -8,7 +8,8 @@
 #include <vector>
 #include <cassert>
 #include <fstream>
-
+#include <algorithm>
+using namespace std;
 /**
  * Takes a filename and reads in all the text from the file
  * Newline characters are also just characters in ASCII
@@ -45,3 +46,7 @@ std::string Trim(const std::string & str);
 int SplitString(const std::string & str1, char sep, std::vector<std::string> &fields);
 
 std::string TrimQuotations(const std::string & str);
+
+bool comp(pair<string, double>& a, pair<string, double>& b);
+
+vector<pair<string, double>> sortmap(map<string, double>& M);

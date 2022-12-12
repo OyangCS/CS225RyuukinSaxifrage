@@ -483,3 +483,7 @@ void Graph::PrintShortestPath(string src_id, string des_id) {
         myfile.close();
     }
 }
+
+map<string, double> Graph::getCentrality() {
+    return bc_;
+}
