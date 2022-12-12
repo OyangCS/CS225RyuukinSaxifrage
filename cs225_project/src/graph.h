@@ -58,8 +58,8 @@ class Graph {
     void FloydWarshall();
 
     // Betweenness Centrality
-    //void Centrality();
-    //double betweenness_centrality( string id);
+    // void Centrality();
+    // double betweenness_centrality( string id);
     unordered_map<string, unordered_map<string, vector<string>>> all_shortest_paths();
 
     //find shortest path from an airport to another (different method than BFS)
@@ -84,7 +84,6 @@ class Graph {
 
     // nodes set
     vector<string> nodes;
-
 
     // Distance Between Two Airports (keys are the concatenation of two IDs)
     map<string, double> distances_;

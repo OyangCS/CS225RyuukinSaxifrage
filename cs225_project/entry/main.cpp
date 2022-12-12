@@ -11,44 +11,49 @@ using namespace std;
 
 int main() {
 
-    Graph test("/workspaces/CS225/release-f22/CS225RyuukinSaxifrage/cs225_project/data/airports.dat.txt", "/workspaces/CS225/release-f22/CS225RyuukinSaxifrage/cs225_project/data/routes.dat.txt");
-    // First argument is path of airport data; second argument is path of routes data; both are within data folder
-    // 
-    // vector<string> one = test.BFSShortestPath("1354", "3830");
+    // Graph Constructor
+    // First argument is path to an airports data file, and second argument is path to a routes data file
+    // airports.dat.txt is the entire airport file and routes.dat.txt is the entire routes file
+    // Data files are found within the data folder
+    // Results in output files undirected_.txt and directed_.txt in build 
+    Graph test("", "");
     
-    // for (size_t i = 0; i < one.size(); i++) {
-    //     cout << one[i] + " ";
-    // }
-    // cout << endl;
-    // test.PrintShortestPath("3729", "3351");
+    // BFS Shortest Path
+    // First argument is source airport ID and second argument is destination airport ID
+    // Reference the directed graph output file from constructor for IDs 
+    // Examples in test file
+    // Use PrintShortestPath to create an output file in build (automatically calls BFSShortestPath)
 
-
-    
-
-    // For Yuhao + Qinghuai
-    //Graph test("/workspaces/cs225/CS225RyuukinSaxifrage/cs225_project/data/airports_huge.dat.txt", "/workspaces/cs225/CS225RyuukinSaxifrage/cs225_project/data/routes.dat.txt");
-    //test.FloydWarshall();
-    //test shortest path
     /*
-    unordered_map<string, unordered_map<string, vector<string>>> paths = test.all_shortest_paths();
-    for (auto it = paths.begin(); it != paths.end(); it++) {
-        for (auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
-            cout << it->first << " " << it2->first << " ";
-            for (auto it3 = it2->second.begin(); it3 != it2->second.end(); it3++) {
-                cout << *it3 << " ";
-            }
-            cout << endl;
-        }
+
+    vector<string> bfs = test.BFSShortestPath("", "");
+    // test.PrintShortestPath("", "");
+
+    // Printing BFSShortestPath
+    for (size_t i = 0; i < bfs.size(); i++) {
+        cout << bfs[i] + " " + test.IDToAirport(bfs[i]).name_ + " ";
     }
-    */
-   // test.calculateBC();
-   // cout << test.getcentrality("B") << endl;
+    cout << endl;
+
+    */    
+
+   // Floyd-Warshall
+   // Insufficient testing, but finishes compiling for only subsets
+
+   // test.FloyldWarshall();
+
+    // Betweenness Centrality
+    // Recommended to not test on entire data files and use the small/subset files
+    // Prints the five airports with greatest centrality
+    
+    /*
     test.calculateBC();
     map<string, double> centrality = test.getCentrality();
     vector<pair<string, double>> list = sortmap(centrality);
     for (unsigned i = 0; i < 5; ++i) {
-        cout<< test.IDToAirport(list[i].first).name_<< " with centrality: " << list[i].second<<endl;
+        cout << test.IDToAirport(list[i].first).name_<< " with centrality: " << list[i].second <<endl;
     }
+    */
    
     return 0;
 }

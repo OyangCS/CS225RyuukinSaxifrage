@@ -15,15 +15,12 @@ To run tests:
 make test
 ./test
 
-NOTE: Paths to the data files (such as the ones used in main and test cases) might need to be updated based on the user.
-Most efficient way to replace paths/filenames in a file is probably find and replace all.
+NOTE: Paths to the data files (such as the ones used in main and test cases) might need to be updated based on the user. If paths do not work, most efficient way to replace paths/filenames in a file is probably find and replace all.
 
-1.) Right click a data file under data folder, copy path.
+1.) Right click a data file under data folder, copy path. The entire dataset files are named airports and routes.
 2.) CTRL + F for Windows and CTRL + Command Key + F for Mac (Opens find)
-3.) Type in airport- for airport files and routes- for route files
-4.) CTRL + H for Windows and CTRL + Command Key + H for Mac (Opens replace)
-5.) Paste in copied path for replace input box
-6.) There should be replace all next to the replace input box
+3.) CTRL + H for Windows and CTRL + Command Key + H for Mac (Opens replace)
+4.) There should be replace all next to the replace input box
 
 Organization:
 build -> contains all output files 
@@ -36,7 +33,7 @@ Information For Used Functions (all functions are under the Graph class):
 
 Graph(const string & airports, const string & routes) [Contains Output File]
     - Constructor for graph
-    - Takes in paths for airport and routes data files
+    - Takes in paths/filenames for airport and routes data files
 
 void IDToAirportMap(const string & airports)
     - Helper function within graph constructor
@@ -84,10 +81,13 @@ void calculateBC()
     - Time complexity: O(VE)
     - Space complexity : O(V+E)
     - with an unsightly progress bar
+
 double getcentrality(string id)
     - input the airport id and output its corresponding betweenness centrality
+
 map<string, double> getCentrality()
-    - return bc_(see above)
+    - return bc_ (see above)
+
 void print()
     - print the undirected graph
     - used for test

@@ -180,7 +180,7 @@ vector<string> Graph::BFSShortestPath(string src_id, string des_id) {
         return vector<string> { src_id, des_id };
     }
 
-    // Setting up BFS queue, visited maps, and vector of all possible maps
+    // Setting up BFS queue, visited maps, and vector of all possible paths
     // pair contains the path vector and double for total distance traveled
     queue<pair<vector<string>, double>> to_traverse;
     unordered_map<string, bool> visited;
@@ -388,7 +388,6 @@ void Graph::FloydWarshall() {
         }
     }
 }
-
 
 //implement betweenness centrality using Brandes Algorithm
 void Graph::calculateBC() {
