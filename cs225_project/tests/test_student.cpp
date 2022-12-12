@@ -10,10 +10,14 @@
 
 using namespace std;
 
+// Recommended to use find and replace all by using the current arguments in constructor 
+// Users may have different paths to the data files
+// Also suggest doing test cases one by one
+// ./test (name of test including "")
 
 TEST_CASE("Test Graph Constructor (Data Parsing and Mapping)") {
 
-    Graph test("/workspaces/CS225/release-f22/CS225RyuukinSaxifrage/cs225_project/data/airports_huge.dat.txt", "/workspaces/CS225/release-f22/CS225RyuukinSaxifrage/cs225_project/data/routes.dat.txt");
+    Graph test("airportsfile", "routesfile");
 
     // Undirected Graph Mapping
     REQUIRE(test.UndirectedContains("2597", "2531"));
@@ -49,7 +53,7 @@ TEST_CASE("Test Graph Constructor (Data Parsing and Mapping)") {
 }
 
 TEST_CASE("BFS Shortest Path") {
-    Graph test("/workspaces/CS225/release-f22/CS225RyuukinSaxifrage/cs225_project/data/airports.dat.txt", "/workspaces/CS225/release-f22/CS225RyuukinSaxifrage/cs225_project/data/routes.dat.txt");
+    Graph test("airportfile", "routesfile");
 
     // Starting ID does not exist in directed graph but exists in airport data
     REQUIRE(test.BFSShortestPath("6014", "99").empty());
@@ -73,8 +77,9 @@ TEST_CASE("BFS Shortest Path") {
 
 }
 
+// Use small_test_graph for first input and small_test_route for second input
 TEST_CASE("Test Betweenness centrality") {
-    Graph test("/workspaces/cs225/CS225RyuukinSaxifrage/cs225_project/data/small_test_graph.txt", "/workspaces/cs225/CS225RyuukinSaxifrage/cs225_project/data/small_test_routes.txt");
+    Graph test("", "");
     /*
     this graph is a unweighted undirected graph used to test function to calculate the betweenness centrality
     A - B - D - F
