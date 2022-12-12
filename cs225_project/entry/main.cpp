@@ -47,7 +47,7 @@ int main() {
     map<string, double> centrality = test.getCentrality();
     vector<pair<string, double>> list = sortmap(centrality);
     for (unsigned i = 0; i < 5; ++i) {
-        cout<< list[i].first<< " with centrality: " << list[i].second<<endl;
+        cout<< test.IDToAirport(list[i].first).name_<< " with centrality: " << list[i].second<<endl;
     }
    
     return 0;

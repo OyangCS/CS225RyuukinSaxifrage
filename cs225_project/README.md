@@ -76,5 +76,19 @@ void FloydWarshall()
     - Utilizes whole directed graph to construct a matrix of shortest distance between all pairs of airports
     - Takes extremely long time for huge graphs (did not finish running for us on the entire directed graph)
 
-
+void calculateBC()
+    - Brandes Algorithm to calculate the betweenness centrality of all nodes in the undirected and unweighted graph
+    - Utilize BFS and recursive calculation
+    - modifies variable bc_ in Graph class
+    - bc_ is a map<string, double>, where key represents airport id and value represents the corresponding betweenness centrality
+    - Time complexity: O(VE)
+    - Space complexity : O(V+E)
+    - with an unsightly progress bar
+double getcentrality(string id)
+    - input the airport id and output its corresponding betweenness centrality
+map<string, double> getCentrality()
+    - return bc_(see above)
+void print()
+    - print the undirected graph
+    - used for test
 

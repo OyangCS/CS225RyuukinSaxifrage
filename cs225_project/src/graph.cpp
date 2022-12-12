@@ -230,7 +230,7 @@ vector<string> Graph::BFSShortestPath(string src_id, string des_id) {
 
     return vector<string>();
 }
-
+/*
 void Graph::Centrality() {
     // Initialize centrality map
     for (auto& it : undirected_) {
@@ -242,8 +242,8 @@ void Graph::Centrality() {
         it.second = betweenness_centrality(it.first);
     }
 }
-
-//calculate the betweenness centrality of a given node using brandes algorithm
+*/
+/*calculate the betweenness centrality of a given node using brandes algorithm
 double Graph::betweenness_centrality(string airport_id) {
     unordered_map<string, unordered_map<string, vector<string>>> shortest_paths = all_shortest_paths();
     
@@ -270,7 +270,7 @@ double Graph::betweenness_centrality(string airport_id) {
     return static_cast<double>(num_shortest_paths) / static_cast<double>(shortest_paths.size());
 
 }
-
+*/
 
 
 /* 
