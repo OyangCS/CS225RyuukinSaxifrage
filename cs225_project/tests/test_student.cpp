@@ -14,7 +14,7 @@ using namespace std;
 // recommended to use find and replace all by using the current arguments in constructor 
 // Users may have different paths to the data files
 // Also suggest doing test cases one by one
-// run ./test (name of test including "")
+// To run individual tests, do ./test "replace-this-part-with-name-of-test-case"
 
 TEST_CASE("Test Graph Constructor (Data Parsing and Mapping)") {
 
