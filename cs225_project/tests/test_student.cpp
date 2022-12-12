@@ -10,10 +10,11 @@
 
 using namespace std;
 
-// Recommended to use find and replace all by using the current arguments in constructor 
+// For first two test cases,
+// recommended to use find and replace all by using the current arguments in constructor 
 // Users may have different paths to the data files
 // Also suggest doing test cases one by one
-// ./test (name of test including "")
+// run ./test (name of test including "")
 
 TEST_CASE("Test Graph Constructor (Data Parsing and Mapping)") {
 
