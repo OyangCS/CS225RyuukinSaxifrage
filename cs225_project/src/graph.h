@@ -45,6 +45,7 @@ class Graph {
     // Testing Functions
     bool UndirectedContains(string id, string target);
     bool DirectedContains(string id, string target);
+    void PrintShortestPath(string src_id, string des_id);
     
 
     vector<string> BFSShortestPath(string src_id, string des_id);

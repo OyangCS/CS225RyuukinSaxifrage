@@ -4,6 +4,7 @@
 #include "utils.h"
 
 #include <iostream>
+#include <fstream>
 #include <algorithm>
 #include <queue>
 #include <stack>
@@ -14,19 +15,19 @@
 
 using namespace std;
 
-// Inputs in the filenames for airports and routes data
+// Inputs in the paths/filenames for airports and routes data
 Graph::Graph(const string & airports, const string & routes) {
 
     // Create map of id to airport
     IDToAirportMap(airports);
 
-    // Build a map to keep track of the routes' directions
+    // Build a map to keep track of the routes' directions for undirected graph
     // We only consider a route if there exists another route that goes the other way 
     map<pair<string, string>, bool> reverse_map;
 
     // Data Parsing
     // It first converts the entire file to one long string, then splits the string based on '\n' or lines
-    // At each index of the data vector holds a string representing a line of the data
+    // At each index of the data vector holds a string representing a line of the dataset
     // We iterate through the vector and add each line of data to the map
     string file_str = file_to_string(routes);
     vector<string> data;
@@ -39,8 +40,8 @@ Graph::Graph(const string & airports, const string & routes) {
             if (reverse_map[make_pair(route_temp[5], route_temp[3])] == true) {
                 graph_[route_temp[3]].push_back(Route(id_map_[route_temp[3]], id_map_[route_temp[5]], distance));
                 graph_[route_temp[5]].push_back(Route(id_map_[route_temp[5]], id_map_[route_temp[3]], distance));
-                // if(find(nodes.begin(),nodes.end(),route_temp[3])==nodes.end())nodes.push_back(route_temp[3]);
-                // if(find(nodes.begin(),nodes.end(),route_temp[5])==nodes.end())nodes.push_back(route_temp[5]);
+                if(find(nodes.begin(),nodes.end(),route_temp[3])==nodes.end())nodes.push_back(route_temp[3]);
+                if(find(nodes.begin(),nodes.end(),route_temp[5])==nodes.end())nodes.push_back(route_temp[5]);
             } else {
                 reverse_map[make_pair(route_temp[3], route_temp[5])] = true;
             }
@@ -49,24 +50,40 @@ Graph::Graph(const string & airports, const string & routes) {
         route_temp.clear();
     }
 
-    /*
-    for (auto& it : graph_) {
-        cout << it.first + " is connected to: ";
-        for (size_t i = 0; i < it.second.size(); i++) {
-            cout << it.second[i].des_id_ + " ";
+    // Output file to show undirected graph
+    ofstream undirect ("undirected_.txt");
+    if (undirect.is_open()) {
+        for (auto& it : graph_) {
+            undirect << it.first + " is connected to: ";
+            for (size_t i = 0; i < it.second.size(); i++) {
+                undirect << it.second[i].des_id_ + " ";
+            }
+            undirect << endl;
         }
-        cout << endl;
+        undirect.close();
     }
-    */
+
+    // Output file to show directed graph
+    ofstream direct ("directed_.txt");
+    if (direct.is_open()) {
+        for (auto& it : directed_) {
+            direct << it.first + " is connected to: ";
+            for (size_t i = 0; i < it.second.size(); i++) {
+                direct << it.second[i].des_id_ + " ";
+            }
+            direct << endl;
+        }
+        direct.close();
+    }
 
     // For Floyd-Warshall Algorithm
-    matrix_ = vector<vector<double>> (directed_.size(), vector<double> (directed_.size()));
-    for (auto& it : directed_) {   
-        matrix_map.push_back(it.first);
-        for (size_t i = 0; i < it.second.size(); i++) {
-            distances_[it.first + it.second[i].des_id_] = it.second[i].distance_;
-        }
-    }
+    // matrix_ = vector<vector<double>> (directed_.size(), vector<double> (directed_.size()));
+    // for (auto& it : directed_) {   
+    //     matrix_map.push_back(it.first);
+    //     for (size_t i = 0; i < it.second.size(); i++) {
+    //         distances_[it.first + it.second[i].des_id_] = it.second[i].distance_;
+    //     }
+    // }
 }
 
 
@@ -154,27 +171,38 @@ bool Graph::DirectedContains(string id, string target) {
 /* 
 BFS Traversal (using directed graph)
 Arguments are starting airport and destination airport (in IDs)
-Outputs a vector of strings/IDs representing shortest path
-Empty vector indicates no path exists
+Outputs a vector of strings/IDs representing shortest path in order
+An empty vector indicates that no path exists
 */
 vector<string> Graph::BFSShortestPath(string src_id, string des_id) {
 
+    // Check for nonexisting ids and same arguments
     if(directed_.find(src_id) == directed_.end() || directed_.find(des_id) == directed_.end()) {
         return vector<string>();
     } else if (src_id == des_id) {
         return vector<string> { src_id, des_id };
     }
 
+    // Setting up BFS queue, visited maps, and vector of all possible maps
+    // pair contains the path vector and double for total distance traveled
     queue<pair<vector<string>, double>> to_traverse;
     unordered_map<string, bool> visited;
     to_traverse.push(make_pair(vector<string> { src_id }, 0));
     vector<pair<vector<string>, double>> paths;
 
     while(!to_traverse.empty()) {
+
+        // Get front vector of queue and push neighbors of last value of vector
+        // Change visited of current to true
         pair<vector<string>, double> current = to_traverse.front();
         to_traverse.pop();
         vector<Route> current_vec = directed_[current.first.back()];
         visited[current.first.back()] = true;
+
+        // Construct paths based on neighbors of current in order (BFS)
+        // To avoid creating vectors, we use push_back and pop_back with current vector
+        // Check if visited is false before proceeding
+        // If neighbor == des_id, we push the path vector to paths rather than to the queue
         for (size_t i = 0; i < current_vec.size(); i++) {
             if (visited[current_vec[i].des_id_] == false) {
                 current.first.push_back(current_vec[i].des_id_);
@@ -190,17 +218,7 @@ vector<string> Graph::BFSShortestPath(string src_id, string des_id) {
         }
     }
 
-    
-    cout << "Paths Size: " << paths.size() << endl;
-    
-    for (size_t i = 0; i < paths.size(); i++) {
-        cout << "A path exists from: ";
-        for (size_t j = 0; j < paths[i].first.size(); j++) {
-            cout << paths[i].first[j] + " ";
-        }
-        cout << endl;
-    }
-
+    // Find mininum distance traveled among all possible paths
     if (!paths.empty()) {
         int shortest_index = 0;
         double min = paths[0].second;
@@ -212,6 +230,7 @@ vector<string> Graph::BFSShortestPath(string src_id, string des_id) {
         }
         return paths[shortest_index].first;
     }
+
     return vector<string>();
 }
 
@@ -438,6 +457,7 @@ void Graph::calculateBC() {
 double Graph::getcentrality(string id) {
     return bc_[id];
 }
+
 void Graph::print() {
     for (auto i = graph_.begin(); i != graph_.end(); ++i) {
         string src = i->first;
@@ -445,5 +465,21 @@ void Graph::print() {
             string w = r->des_id_;
             cout << src << "->" << w<<endl;
         }
+    }
+}
+
+void Graph::PrintShortestPath(string src_id, string des_id) {
+    vector<string> vec = BFSShortestPath(src_id, des_id);
+    ofstream myfile (src_id + "to" + des_id + ".txt");
+    if (myfile.is_open()) {
+        myfile << "Shortest Path from " + src_id + " to " + des_id + ": " << endl; 
+        if (!vec.empty()) {
+            for (size_t i = 0; i < vec.size(); i++) {
+                myfile << vec[i] + " " + id_map_[vec[i]].name_ << endl;
+            }
+        } else {
+            myfile << "No Path Exists For These Two Airports" << endl;
+        }
+        myfile.close();
     }
 }

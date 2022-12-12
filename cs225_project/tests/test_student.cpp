@@ -26,11 +26,10 @@ TEST_CASE("Test Graph Constructor (Data Parsing and Mapping)") {
     REQUIRE(test.DirectedContains("4041", "3830"));
     REQUIRE(test.DirectedContains("1926", "3550"));
 
-    REQUIRE(test.UndirectedContains("6014", "2531") == false);
+    REQUIRE(test.DirectedContains("6014", "2531") == false);
 
     // ID-to-Airport Mapping
     Airport one = test.IDToAirport("596");
-
     REQUIRE(one.id_ == "596");
     REQUIRE(one.name_ == "Cork Airport");
     REQUIRE(one.latitude_ == 51.84130096435547);
@@ -47,5 +46,11 @@ TEST_CASE("Test Graph Constructor (Data Parsing and Mapping)") {
     REQUIRE(three.name_ == "Mo i Rana Airport");
     REQUIRE(three.latitude_ == 66.363899230957);
     REQUIRE(three.longitude_ == 14.301400184631);
+}
+
+TEST_CASE("BFS Shortest Path") {
+    Graph test("/workspaces/CS225/release-f22/CS225RyuukinSaxifrage/cs225_project/data/airports_huge.dat.txt", "/workspaces/CS225/release-f22/CS225RyuukinSaxifrage/cs225_project/data/routes.dat.txt");
+
+    
 }
 

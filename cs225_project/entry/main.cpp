@@ -10,23 +10,16 @@
 using namespace std;
 
 int main() {
-    
+
+    Graph test("/workspaces/CS225/release-f22/CS225RyuukinSaxifrage/cs225_project/data/airports_huge.dat.txt", "/workspaces/CS225/release-f22/CS225RyuukinSaxifrage/cs225_project/data/routes.dat.txt");
+
     // First argument is path of airport data; second argument is path of routes data; both are within data folder
     // For Owen
-    Graph test("/workspaces/CS225/release-f22/CS225RyuukinSaxifrage/cs225_project/data/airports_huge.dat.txt", "/workspaces/CS225/release-f22/CS225RyuukinSaxifrage/cs225_project/data/routes.dat.txt");
-    // vector<string> one = test.BFSShortestPath("994", "3351");
+    test.PrintShortestPath("994", "3351");
+    // test.PrintShortestPath("3729", "3351");
+
+
     
-    /*
-    vector<string> one = test.BFSShortestPath("3729", "3351");
-
-    cout << "Shortest Path: ";
-    for (size_t i = 0; i < one.size(); i++) {
-        cout << one[i] + " " + test.IDToAirport(one[i]).name_ + " ";
-    }
-    cout << endl;
-
-    cout << test.IDToAirport("994").id_ + test.IDToAirport("3351").id_ << endl;
-    */
 
     // For Yuhao + Qinghuai
     //Graph test("/workspaces/cs225/CS225RyuukinSaxifrage/cs225_project/data/airports_huge.dat.txt", "/workspaces/cs225/CS225RyuukinSaxifrage/cs225_project/data/routes.dat.txt");
